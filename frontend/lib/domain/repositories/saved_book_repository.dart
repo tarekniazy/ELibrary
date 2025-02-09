@@ -1,7 +1,7 @@
 import 'package:e_library/domain/entities/saved_book.dart';
 
 abstract class SavedBookRepository {
-  Future<SavedBook> getBook(String bookId);
-  Future<SavedBook> createBook(SavedBook book);
+  Future<List<SavedBook>> getBooks(String userId);
+  Future<void> saveBook(SavedBook book, String token);
   Future<void> deleteBook(int id);
 }

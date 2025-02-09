@@ -27,9 +27,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final user = await login.execute(event.email, event.password);
       
       // Save token to secure storage
-      if (user.token != null) {
-        await storage.write(key: 'auth_token', value: user.token);
-      }
+      await storage.write(key: 'auth_token', value: user.token);
+      await storage.write(key: 'user_id', value: user.id);
 
       emit(AuthSuccess(user));
     } catch (e) {

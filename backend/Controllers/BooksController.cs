@@ -4,10 +4,10 @@ using ELibrary.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using NuGet.Common;
 
 namespace ELibrary.Controllers
 {
-    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class BooksController : ControllerBase
@@ -38,20 +38,19 @@ namespace ELibrary.Controllers
         public async Task<ActionResult<Book>> PostBook(Book book)
         {
             // Get user ID from the JWT token
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (string.IsNullOrEmpty(userId))
+            var userEmail = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userEmail))
             {
                 return Unauthorized();
             }
 
-            // Assign the user ID to the book
-            book.UserId = userId;
+            // Assign the creation date book
             book.DownloadDate = DateTime.UtcNow;
 
             _context.Books.Add(book);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetBook", new { id = book.Id }, book);
+            return Ok();
         }
 
         // DELETE: api/Books/5
@@ -82,11 +81,6 @@ namespace ELibrary.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
-        }
-
-        private bool BookExists(int id)
-        {
-            return _context.Books.Any(e => e.Id == id);
         }
     }
 }

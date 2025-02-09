@@ -58,7 +58,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     @override
   Future<void> logout(String token) async {
     try {
-      print("Enetered");
       final response = await client.post(
         Uri.parse('$baseUrl/logout'),
         headers: {

@@ -8,6 +8,7 @@ class AuthSuccess extends AuthState {
   final AuthUser user;
   AuthSuccess(this.user);
 }
+
 class AuthError extends AuthState {
   final String message;
   AuthError(this.message);

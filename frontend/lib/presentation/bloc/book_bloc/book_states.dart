@@ -13,3 +13,12 @@ class BookError extends BookState {
   final String message;
   BookError(this.message);
 }
+
+class BookSaving extends BookState {}
+
+class BookSaved extends BookState {}
+
+class BookSaveError extends BookState {
+  final String message;
+  BookSaveError(this.message);
+}

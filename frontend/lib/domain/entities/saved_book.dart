@@ -1,7 +1,7 @@
 class SavedBook {
   final int id;
   final String userId;
-  final int gutenbergId;
+  final String gutenbergId;
   final String title;
   final String language;
   final DateTime downloadDate;

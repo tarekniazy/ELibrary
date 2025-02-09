@@ -40,7 +40,7 @@ public class AuthController : ControllerBase
         {
             // Generate JWT token
             var token = await GenerateJwtToken(user);
-            return Ok(new { Token = token });
+            return Ok(new { UserId = user.Id, Email = user.Email, Token = token });
         }
 
         return BadRequest(result.Errors);
@@ -63,7 +63,7 @@ public class AuthController : ControllerBase
         {
             // Generate JWT token
             var token = await GenerateJwtToken(user);
-            return Ok(new { Email=model.Email,Token = token });
+            return Ok(new { UserId=user.Id, Email = user.Email,Token = token });
         }
 
         return BadRequest("Invalid credentials");

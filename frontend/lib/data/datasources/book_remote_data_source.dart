@@ -34,6 +34,7 @@ class BookRemoteDataSourceImpl implements BookRemoteDataSource {
       final language = document.querySelector('html')?.attributes['lang'] ?? 'en';
 
       return BookModel(
+        gutenbergId: bookId,
         content: content,
         metadata: metadataResponse.body,
         title: title,

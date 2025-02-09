@@ -1,12 +1,12 @@
 import 'package:e_library/domain/entities/saved_book.dart';
 import 'package:e_library/domain/repositories/saved_book_repository.dart';
 
-class CreateBook {
+class SaveBook {
   final SavedBookRepository repository;
 
-  CreateBook(this.repository);
+  SaveBook(this.repository);
 
-  Future<SavedBook> execute(SavedBook book) async {
-    return await repository.createBook(book);
+  Future<void> execute(SavedBook book, String token) async {
+    return await repository.saveBook(book,token);
   }
 }

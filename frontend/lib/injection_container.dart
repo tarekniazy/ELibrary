@@ -1,9 +1,13 @@
 import 'package:e_library/data/datasources/auth_remote_data_source.dart';
+import 'package:e_library/data/datasources/saved_book_remote_data_source.dart';
 import 'package:e_library/data/repositories/auth_repository_impl.dart';
+import 'package:e_library/data/repositories/saved_book_respository_impl.dart';
 import 'package:e_library/domain/repositories/auth_repository.dart';
+import 'package:e_library/domain/repositories/saved_book_repository.dart';
 import 'package:e_library/domain/usecases/login.dart';
 import 'package:e_library/domain/usecases/logout.dart';
 import 'package:e_library/domain/usecases/register.dart';
+import 'package:e_library/domain/usecases/save_book.dart';
 import 'package:e_library/presentation/bloc/auth_bloc/auth_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
@@ -18,10 +22,19 @@ final sl = GetIt.instance;
 
 Future<void> initializeDependencies() async {
   // Bloc
-  sl.registerFactory(() => BookBloc(getBook: sl()));
+  sl.registerFactory(() => BookBloc(getBook: sl(), saveBook: sl(), storage: GetIt.I<FlutterSecureStorage>()));
+  sl.registerFactory(
+    () => AuthBloc(
+      login: sl(),
+      register: sl(),
+      logout: sl(),
+      storage: GetIt.I<FlutterSecureStorage>(), // Inject storage
+    ),
+  );
 
   // Use cases
   sl.registerLazySingleton(() => GetBook(sl()));
+  sl.registerLazySingleton(() => SaveBook(sl()));
 
   // Repository
   sl.registerLazySingleton<BookRepository>(
@@ -33,19 +46,19 @@ Future<void> initializeDependencies() async {
     () => BookRemoteDataSourceImpl(client: sl()),
   );
 
+    // Repository
+  sl.registerLazySingleton<SavedBookRemoteDataSource>(
+    () => SavedBookRemoteDataSourceImpl(client: sl()),
+  );
+
+  // Data sources
+  sl.registerLazySingleton<SavedBookRepository>(
+    () => SavedBookRepositoryImpl(remoteDataSource: sl()),
+  );
+
   // External
   sl.registerLazySingleton(() => http.Client());
 
-    
-    // Auth Bloc
-  sl.registerFactory(
-    () => AuthBloc(
-      login: sl(),
-      register: sl(),
-      logout: sl(),
-      storage: GetIt.I<FlutterSecureStorage>(), // Inject storage
-    ),
-  );
 
   // Auth Use cases
   sl.registerLazySingleton(() => Login(sl()));

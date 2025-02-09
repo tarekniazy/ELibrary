@@ -1,6 +1,7 @@
 import 'package:e_library/presentation/bloc/auth_bloc/auth_bloc.dart';
 import 'package:e_library/presentation/bloc/auth_bloc/auth_events.dart';
 import 'package:e_library/presentation/bloc/auth_bloc/auth_states.dart';
+import 'package:e_library/presentation/bloc/book_bloc/book_events.dart';
 import 'package:e_library/presentation/pages/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,7 +26,13 @@ class HomePage extends StatelessWidget {
                 return IconButton(
                   icon: const Icon(Icons.bookmark_add),
                   onPressed: () {
-                    // TODO: Implement save functionality
+
+                    context.read<BookBloc>().add(SaveBookEvent(
+                      gutenbergId: state.book.gutenbergId,
+                      title: state.book.title,
+                      language: state.book.language,
+                    ));
+
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text('Book saved to your library'),

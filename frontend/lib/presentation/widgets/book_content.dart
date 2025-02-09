@@ -10,13 +10,12 @@ class BookContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2,
+      length: 1,
       child: Column(
         children: [
           const TabBar(
             tabs: [
               Tab(text: 'Content'),
-              Tab(text: 'Metadata'),
             ],
             labelColor: Colors.blue,
           ),
