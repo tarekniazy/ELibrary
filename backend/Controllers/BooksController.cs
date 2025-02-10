@@ -8,6 +8,7 @@ using NuGet.Common;
 
 namespace ELibrary.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class BooksController : ControllerBase
@@ -22,10 +23,9 @@ namespace ELibrary.Controllers
             _context = context;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Book>>> GetBooks()
+        [HttpGet("{userId}")]
+        public async Task<ActionResult<IEnumerable<Book>>> GetBooks(String userId)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             return await _context.Books
                 .Where(b => b.UserId == userId)
                 .ToListAsync();

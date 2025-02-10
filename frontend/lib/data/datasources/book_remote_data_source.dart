@@ -39,6 +39,7 @@ class BookRemoteDataSourceImpl implements BookRemoteDataSource {
         metadata: metadataResponse.body,
         title: title,
         language: language,
+        textAnalysis: '',
       );
     } catch (e) {
       throw Exception('Error fetching book: $e');

@@ -7,6 +7,8 @@ namespace ELibrary.Models
         [Key]
         public int Id { get; set; }
         public required string UserId { get; set; }
+        public required string Content { get; set; }
+        public required string TextAnalysis { get; set; }
         public required string GutenbergId { get; set; }
         public required string Title { get; set; }
         public required string Language { get; set; }

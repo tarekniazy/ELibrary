@@ -4,11 +4,13 @@ import 'package:e_library/data/repositories/auth_repository_impl.dart';
 import 'package:e_library/data/repositories/saved_book_respository_impl.dart';
 import 'package:e_library/domain/repositories/auth_repository.dart';
 import 'package:e_library/domain/repositories/saved_book_repository.dart';
+import 'package:e_library/domain/usecases/get_books.dart';
 import 'package:e_library/domain/usecases/login.dart';
 import 'package:e_library/domain/usecases/logout.dart';
 import 'package:e_library/domain/usecases/register.dart';
 import 'package:e_library/domain/usecases/save_book.dart';
 import 'package:e_library/presentation/bloc/auth_bloc/auth_bloc.dart';
+import 'package:e_library/presentation/bloc/saved_book_bloc/saved_book_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'data/repositories/book_repository_impl.dart';
@@ -31,10 +33,13 @@ Future<void> initializeDependencies() async {
       storage: GetIt.I<FlutterSecureStorage>(), // Inject storage
     ),
   );
+  sl.registerFactory(() => SavedBooksBloc(getBooks: sl(), storage: GetIt.I<FlutterSecureStorage>()));
+
 
   // Use cases
   sl.registerLazySingleton(() => GetBook(sl()));
   sl.registerLazySingleton(() => SaveBook(sl()));
+  sl.registerLazySingleton(() => GetBooks(sl()));
 
   // Repository
   sl.registerLazySingleton<BookRepository>(

@@ -1,3 +1,4 @@
+import 'package:e_library/domain/entities/saved_book.dart';
 import 'package:e_library/domain/repositories/saved_book_repository.dart';
 
 class GetBooks {
@@ -5,7 +6,7 @@ class GetBooks {
 
   GetBooks(this.repository);
 
-  Future<void> execute(String userId) async {
-    await repository.getBooks(userId);
+  Future<List<SavedBook>> execute(String userId, String token) async {
+    return await repository.getBooks(userId,token);
   }
 }

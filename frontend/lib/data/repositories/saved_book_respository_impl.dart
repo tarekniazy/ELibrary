@@ -12,7 +12,7 @@ class SavedBookRepositoryImpl implements SavedBookRepository {
   Future<void> saveBook(SavedBook book, String token) async => await remoteDataSource.saveBook(SavedBookModel.fromEntity(book), token);
 
   @override
-  Future<List<SavedBook>> getBooks(String userId) async => await remoteDataSource.getSavedBooks(userId);
+  Future<List<SavedBook>> getBooks(String userId, String token) async => await remoteDataSource.getSavedBooks(userId,token);
 
   @override
   Future<void> deleteBook(int id) async => await remoteDataSource.deleteBook(id);

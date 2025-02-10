@@ -5,6 +5,8 @@ class SavedBookModel extends SavedBook {
     required id,
     required userId,
     required gutenbergId,
+    required content,
+    required textAnalysis,
     required title,
     required language,
     required downloadDate,
@@ -12,6 +14,8 @@ class SavedBookModel extends SavedBook {
           id: id,
           userId: userId,
           gutenbergId: gutenbergId,
+          content: content,
+          textAnalysis: textAnalysis,
           title: title,
           language: language,
           downloadDate: downloadDate,
@@ -22,9 +26,11 @@ class SavedBookModel extends SavedBook {
       id: json['id'],
       userId: json['userId'],
       gutenbergId: json['gutenbergId'],
+      content: json['content'],
+      textAnalysis: json['textAnalysis'],
       title: json['title'],
       language: json['language'],
-      downloadDate: json['downloadDate'],
+      downloadDate: DateTime.parse(json['downloadDate']),
     );
   }
   
@@ -32,15 +38,19 @@ class SavedBookModel extends SavedBook {
     'id': id,
     'userId': userId,
     'gutenbergId': gutenbergId,
+    'content': content,
+    'textAnalysis': textAnalysis,
     'title': title,
     'language': language,
-    'downloadDate': downloadDate,
+    'downloadDate': downloadDate.toIso8601String(), // Convert to ISO 8601 string
   };
 
   factory SavedBookModel.fromEntity(SavedBook savedBook) => SavedBookModel(
     id: savedBook.id,
     userId: savedBook.userId,
     gutenbergId: savedBook.gutenbergId,
+    content: savedBook.content,
+    textAnalysis: savedBook.textAnalysis,
     title: savedBook.title,
     language: savedBook.language,
     downloadDate: savedBook.downloadDate,

@@ -20,6 +20,7 @@ class BookBloc extends Bloc<BookEvent, BookState> {
   }) : super(BookInitial()) {
     on<FetchBookEvent>(_onFetchBook);
     on<SaveBookEvent>(_onSaveBook);
+    on<GetSavedBookEvent>(_onGetSavedBook); // Add this line to handle the event>
   }
 
   Future<void> _onFetchBook(FetchBookEvent event, Emitter<BookState> emit) async {
@@ -30,6 +31,10 @@ class BookBloc extends Bloc<BookEvent, BookState> {
     } catch (e) {
       emit(BookError(e.toString()));
     }
+  }
+
+    void _onGetSavedBook(GetSavedBookEvent event, Emitter<BookState> emit) async {
+    emit(BookLoaded(event.book));
   }
 
   Future<void> _onSaveBook(SaveBookEvent event, Emitter<BookState> emit) async {
@@ -49,6 +54,8 @@ class BookBloc extends Bloc<BookEvent, BookState> {
         title: event.title,
         language: event.language,
         downloadDate: DateTime.now(),
+        content: event.content,
+        textAnalysis: event.textAnalysis
       );
 
       print(savedBook);
