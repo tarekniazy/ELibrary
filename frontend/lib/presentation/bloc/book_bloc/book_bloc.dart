@@ -1,4 +1,6 @@
+import 'package:e_library/domain/entities/book.dart';
 import 'package:e_library/domain/entities/saved_book.dart';
+import 'package:e_library/domain/usecases/analyze_sentiment.dart';
 import 'package:e_library/domain/usecases/save_book.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:e_library/domain/usecases/get_book.dart';
@@ -10,17 +12,20 @@ import 'book_states.dart';
 class BookBloc extends Bloc<BookEvent, BookState> {
   final GetBook getBook;
   final SaveBook saveBook;
+  final AnalyzeSentiment analyzeSentiment;
   final FlutterSecureStorage storage;
 
 
   BookBloc({
     required this.getBook,
     required this.saveBook,
+    required this.analyzeSentiment,
     required this.storage
   }) : super(BookInitial()) {
     on<FetchBookEvent>(_onFetchBook);
     on<SaveBookEvent>(_onSaveBook);
     on<GetSavedBookEvent>(_onGetSavedBook); // Add this line to handle the event>
+    on<AnalyzeSentimentEvent>(_onAnalyzeSentiment);
   }
 
   Future<void> _onFetchBook(FetchBookEvent event, Emitter<BookState> emit) async {
@@ -28,6 +33,26 @@ class BookBloc extends Bloc<BookEvent, BookState> {
     try {
       final book = await getBook.execute(event.bookId);
       emit(BookLoaded(book));
+    } catch (e) {
+      emit(BookError(e.toString()));
+    }
+  }
+
+    Future<void> _onAnalyzeSentiment(AnalyzeSentimentEvent event, Emitter<BookState> emit) async {
+    emit(SentimentAnalysisLoading());
+    try {
+      final analysis =await analyzeSentiment.execute(event.text);
+      
+      emit(TextAnalysisLoaded(
+        Book(
+          gutenbergId: event.book.gutenbergId,
+          title: event.book.title,
+          language: event.book.language,
+          content: event.book.content,
+          textAnalysis: analysis,
+          metadata: '',
+        )
+      ));
     } catch (e) {
       emit(BookError(e.toString()));
     }
@@ -58,10 +83,15 @@ class BookBloc extends Bloc<BookEvent, BookState> {
         textAnalysis: event.textAnalysis
       );
 
-      print(savedBook);
-
       await saveBook.execute(savedBook, token);
-      emit(BookSaved());
+      emit(BookSaved(Book(
+        gutenbergId: event.gutenbergId,
+        title: event.title,
+        language: event.language,
+        content: event.content,
+        textAnalysis: event.textAnalysis,
+        metadata: '',
+          )));
     } catch (e) {
       emit(BookSaveError(e.toString()));
     }

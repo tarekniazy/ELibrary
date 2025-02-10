@@ -16,9 +16,17 @@ class BookError extends BookState {
 
 class BookSaving extends BookState {}
 
-class BookSaved extends BookState {}
+class BookSaved extends BookLoaded {
+  BookSaved(Book book) : super(book);
+}
 
 class BookSaveError extends BookState {
   final String message;
   BookSaveError(this.message);
 }
+
+class TextAnalysisLoaded extends BookLoaded {
+  TextAnalysisLoaded(Book book) : super(book);
+}
+
+class SentimentAnalysisLoading extends BookLoading {}

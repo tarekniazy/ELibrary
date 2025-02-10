@@ -4,6 +4,7 @@ import 'package:e_library/data/repositories/auth_repository_impl.dart';
 import 'package:e_library/data/repositories/saved_book_respository_impl.dart';
 import 'package:e_library/domain/repositories/auth_repository.dart';
 import 'package:e_library/domain/repositories/saved_book_repository.dart';
+import 'package:e_library/domain/usecases/analyze_sentiment.dart';
 import 'package:e_library/domain/usecases/get_books.dart';
 import 'package:e_library/domain/usecases/login.dart';
 import 'package:e_library/domain/usecases/logout.dart';
@@ -24,7 +25,7 @@ final sl = GetIt.instance;
 
 Future<void> initializeDependencies() async {
   // Bloc
-  sl.registerFactory(() => BookBloc(getBook: sl(), saveBook: sl(), storage: GetIt.I<FlutterSecureStorage>()));
+  sl.registerFactory(() => BookBloc(getBook: sl(), saveBook: sl(), analyzeSentiment: sl(),storage: GetIt.I<FlutterSecureStorage>()));
   sl.registerFactory(
     () => AuthBloc(
       login: sl(),
@@ -40,6 +41,7 @@ Future<void> initializeDependencies() async {
   sl.registerLazySingleton(() => GetBook(sl()));
   sl.registerLazySingleton(() => SaveBook(sl()));
   sl.registerLazySingleton(() => GetBooks(sl()));
+  sl.registerLazySingleton(() => AnalyzeSentiment(sl()));
 
   // Repository
   sl.registerLazySingleton<BookRepository>(

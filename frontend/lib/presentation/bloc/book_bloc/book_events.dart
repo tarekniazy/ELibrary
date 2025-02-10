@@ -29,3 +29,9 @@ class GetSavedBookEvent extends BookEvent {
   final Book book;
   GetSavedBookEvent(this.book);
 }
+
+class AnalyzeSentimentEvent extends BookEvent {
+  final String text;
+  final Book book;
+  AnalyzeSentimentEvent(this.text, this.book);
+}
