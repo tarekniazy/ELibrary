@@ -19,22 +19,20 @@ import 'data/datasources/book_remote_data_source.dart';
 import 'domain/repositories/book_repository.dart';
 import 'domain/usecases/get_book.dart';
 import 'presentation/bloc/book_bloc/book_bloc.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 final sl = GetIt.instance;
 
 Future<void> initializeDependencies() async {
   // Bloc
-  sl.registerFactory(() => BookBloc(getBook: sl(), saveBook: sl(), analyzeSentiment: sl(),storage: GetIt.I<FlutterSecureStorage>()));
+  sl.registerFactory(() => BookBloc(getBook: sl(), saveBook: sl(), analyzeSentiment: sl()));
   sl.registerFactory(
     () => AuthBloc(
       login: sl(),
       register: sl(),
       logout: sl(),
-      storage: GetIt.I<FlutterSecureStorage>(), // Inject storage
     ),
   );
-  sl.registerFactory(() => SavedBooksBloc(getBooks: sl(), storage: GetIt.I<FlutterSecureStorage>()));
+  sl.registerFactory(() => SavedBooksBloc(getBooks: sl()));
 
 
   // Use cases
@@ -85,6 +83,4 @@ Future<void> initializeDependencies() async {
       client: sl(),
     ),
   );
-
-  sl.registerLazySingleton<FlutterSecureStorage>(() => const FlutterSecureStorage());
 }

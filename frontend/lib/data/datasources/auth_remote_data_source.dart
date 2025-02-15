@@ -11,7 +11,7 @@ abstract class AuthRemoteDataSource {
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final http.Client client;
-  final String baseUrl = 'https://localhost:7000/api/Auth';
+  final String baseUrl = 'http://108.129.133.132:80/api/Auth';
 
   AuthRemoteDataSourceImpl({required this.client});
 

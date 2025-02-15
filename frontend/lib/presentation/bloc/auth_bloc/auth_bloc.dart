@@ -1,6 +1,6 @@
 import 'package:e_library/domain/usecases/logout.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:e_library/domain/usecases/login.dart';
 import 'package:e_library/domain/usecases/register.dart';
@@ -12,24 +12,23 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final Login login;
   final Register register;
   final Logout logout;
-  final FlutterSecureStorage storage;
 
-  AuthBloc({required this.login, required this.register,required this.logout,required this.storage,}) : super(AuthInitial()) {
+  AuthBloc({required this.login, required this.register, required this.logout}) : super(AuthInitial()) {
     on<LoginEvent>(_onLogin);
     on<RegisterEvent>(_onRegister);
     on<LogoutEvent>(_onLogout);
   }
 
   Future<void> _onLogin(LoginEvent event, Emitter<AuthState> emit) async {
-    
     emit(AuthLoading());
     try {
       final user = await login.execute(event.email, event.password);
+      final prefs = await SharedPreferences.getInstance();
       
-      // Save token to secure storage
-      await storage.write(key: 'auth_token', value: user.token);
-      await storage.write(key: 'user_id', value: user.id);
-
+      // Save token to shared preferences
+      await prefs.setString('auth_token', user.token);
+      await prefs.setString('user_id', user.id);
+      
       emit(AuthSuccess(user));
     } catch (e) {
       emit(AuthError(e.toString()));
@@ -50,12 +49,19 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
   
-    Future<void> _onLogout(LogoutEvent event, Emitter<AuthState> emit) async {
-      final token = await storage.read(key: 'auth_token');
-
+  Future<void> _onLogout(LogoutEvent event, Emitter<AuthState> emit) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('auth_token');
+    
     emit(AuthLoading());
     try {
-      await logout.execute(token!);
+      if (token != null) {
+        await logout.execute(token);
+      }
+      
+      await prefs.remove('auth_token');
+      await prefs.remove('user_id');
+      
       emit(AuthInitial());
     } catch (e) {
       emit(AuthError(e.toString()));
